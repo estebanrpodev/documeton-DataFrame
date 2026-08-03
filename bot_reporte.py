@@ -1,32 +1,29 @@
 import pandas as pd
-import glob 
+from datos import cargar_datos
 
-# 1. Buscar datos y leer archivos
+# 1. Cargar solo los archivos fuente (ya no se usa glob.glob,
+#    asi los archivos generados no se vuelven a leer)
 
-df_medellin = pd.read_csv("sucursal_medellin.csv")
-#print(df_medellin)
+lista_dataframes = cargar_datos()
 
-df_bogota = pd.read_excel("sucursal_bogota.xlsx")
-#print(df_bogota.head(3))
+# 2. Consolidar (ver problema)
+df_consolidado = pd.concat(lista_dataframes, ignore_index=True)
+df_consolidado.to_excel("consolidado_desordenado.xlsx", index=False)
 
-#print(df_medellin.columns)
-#print(df_bogota.columns)
-archivo_csv = glob.glob("*.csv")
-print(f"Archivo_csv {archivo_csv}")
+# 3. Normalizar nombres de columnas: uno de los 4 archivos (Bogota)
+#    tiene columnas con nombres distintos a los demas
 
-archivo_xlsx = glob.glob("*.xlsx")
-print(f"Archivo_xlsx {archivo_xlsx}")
+for i, df in enumerate(lista_dataframes):
+    if 'Fecha_Venta' in df.columns:
+        lista_dataframes[i] = df.rename(columns={
+            "Fecha_Venta": "fecha",
+            "Producto": "producto",
+            "Categoria": "categoria",
+            "Cant": "cantidad",
+            "Valor_Unitario": "precio_unitario",
+            "Vendedor": "vendedor",
+            "Pago": "metodo_pago"
+        })
 
-# 2. Guardar en una lista
-
-lista_dataframes = []
-
-for archivo in archivo_csv:
-    df = pd.read_csv(archivo)
-    lista_dataframes.append(df)
-    print(f"Leido: {archivo} - {len(df)} filas")
-
-for archivo in archivo_xlsx:
-    df = pd.read_excel(archivo)
-    lista_dataframes.append(df)
-    print(f"Leido: {archivo} - {len(df)} filas")
+df_consolidado = pd.concat(lista_dataframes, ignore_index=True)
+df_consolidado.to_excel("consolidado_semiordenado.xlsx", index=False)

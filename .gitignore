@@ -1,0 +1,6 @@
+# Archivos generados por el script
+consolidado_*.xlsx
+
+# Cache de Python
+__pycache__/
+*.pyc
