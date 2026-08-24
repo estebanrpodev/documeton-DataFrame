@@ -39,7 +39,57 @@ Puedes ejecutarlo las veces que quieras: los archivos generados en `resultados/`
 5. **Analiza y grafica**:
    - Barras: ventas totales por categoría → `resultados/grafico_categoria.png`.
    - Torta: participación de cada vendedor → `resultados/grafico_vendedor.png`.
-   - Producto que más veces aparece en las ventas (`value_counts()`).
+   - Producto que más veces aparece en las ventas (`value_counts()`), reportando empates si los hay.
+
+## Resultados
+
+Números reales de la última ejecución del script.
+
+### Limpieza de datos
+
+- Filas leídas: **66** → filas limpias: **63** (se eliminaron **3 duplicados**, todos de Cali)
+- Valores nulos corregidos:
+  - `metodo_pago`: 14 → rellenados con `'Desconocido'`
+  - `vendedor`: 2 → rellenados con `'Desconocido'`
+  - `precio_unitario`: 3 → rellenados con la mediana del mismo producto
+
+### Producto más vendido
+
+Empate en el primer puesto con **10 ventas** cada uno:
+
+| Producto | Apariciones |
+|---|---|
+| Jean clasico | 10 |
+| Cargador USB-C | 10 |
+| Camiseta basica | 9 |
+| Medias deportivas | 7 |
+
+### Ventas por categoría
+
+| Categoría | Ventas totales* |
+|---|---|
+| Electrónica | $3.323.700 |
+| Ropa | $2.623.100 |
+| **Total general** | **$5.946.800** |
+
+### Participación por vendedor
+
+| Vendedor | Ventas | % del total |
+|---|---|---|
+| Camila Ruiz | $1.696.600 | 28,5% |
+| Andres Gomez | $1.381.700 | 23,2% |
+| Sofia Mena | $1.322.300 | 22,2% |
+| Felipe Torres | $699.000 | 11,8% |
+| Laura Diaz | $660.500 | 11,1% |
+| Desconocido | $186.700 | 3,1% |
+
+### Métodos de pago
+
+Tarjeta: 17 ventas · Efectivo: 16 · Transferencia: 16 · Desconocido: 14
+
+Los gráficos con estos resultados quedan en `resultados/grafico_categoria.png` y `resultados/grafico_vendedor.png`.
+
+\* Los totales corresponden a la suma de `precio_unitario` por venta, igual que en los gráficos.
 
 ## Historial del problema de re-ejecución
 
