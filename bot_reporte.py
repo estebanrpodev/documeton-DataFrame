@@ -79,6 +79,7 @@ plt.xticks(rotation=0)
 plt.tight_layout()  # Ajusta los elementos para que no se corten
 plt.savefig(os.path.join(CARPETA_RESULTADOS, "grafico_categoria.png"))
 plt.show()
+plt.close()  # Cierra la figura para que el siguiente grafico no se dibuje encima
 
 # 6b. Participación por vendedor (gráfico de torta)
 ventas_por_vendedor = df_consolidado.groupby('vendedor')['precio_unitario'].sum()
@@ -87,10 +88,19 @@ plt.ylabel('')  # No aplica en gráficos de torta
 plt.tight_layout()
 plt.savefig(os.path.join(CARPETA_RESULTADOS, "grafico_vendedor.png"))
 plt.show()
+plt.close()  # Buena practica: no dejar figuras abiertas al terminar
 
-# 6c. Producto que más veces aparece en las ventas (value_counts)
+# 6c. Productos más vendidos con value_counts()
+#     Si hay empate en el primer puesto, se reportan todos los empatados
 productos_mas_vendidos = df_consolidado['producto'].value_counts()
 print("\nProductos por número de ventas:")
 print(productos_mas_vendidos.head(10))
-producto_top = productos_mas_vendidos.idxmax()
-print(f"\nEl producto que más veces aparece es: {producto_top} ({productos_mas_vendidos.max()} veces)")
+
+max_ventas = productos_mas_vendidos.max()
+empatados = list(productos_mas_vendidos[productos_mas_vendidos == max_ventas].index)
+if len(empatados) == 1:
+    print(f"\nEl producto más vendido es: {empatados[0]} ({max_ventas} veces)")
+else:
+    print(f"\nEmpate en el primer puesto con {max_ventas} ventas cada uno:")
+    for p in empatados:
+        print(f"  - {p}")
