@@ -16,14 +16,13 @@ os.makedirs(CARPETA_RESULTADOS, exist_ok=True)
 #    (ya no se usa glob.glob, asi los archivos generados no se vuelven a leer)
 lista_dataframes = cargar_datos()
 
-# 2. Consolidar
-df_consolidado = pd.concat(lista_dataframes, ignore_index=True)
-
-# 3. Normalizar nombres de columnas: uno de los 4 archivos (Bogota)
-#    tiene columnas con nombres distintos a los demas
-for i, df in enumerate(lista_dataframes):
+# 2. Normalizar nombres de columnas ANTES de consolidar:
+#    uno de los 4 archivos (Bogota) tiene columnas con nombres distintos a los demas.
+#    Se construye una lista nueva en vez de modificar lista_dataframes mientras se recorre.
+dataframes_normalizados = []
+for df in lista_dataframes:
     if 'Fecha_Venta' in df.columns:
-        lista_dataframes[i] = df.rename(columns={
+        df = df.rename(columns={
             "Fecha_Venta": "fecha",
             "Producto": "producto",
             "Categoria": "categoria",
@@ -32,8 +31,10 @@ for i, df in enumerate(lista_dataframes):
             "Vendedor": "vendedor",
             "Pago": "metodo_pago"
         })
+    dataframes_normalizados.append(df)
 
-df_consolidado = pd.concat(lista_dataframes, ignore_index=True)
+# 3. Consolidar todo en un solo DataFrame
+df_consolidado = pd.concat(dataframes_normalizados, ignore_index=True)
 
 # --------------------------------------------
 # PARTE 4: Limpieza de datos

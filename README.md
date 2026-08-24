@@ -14,7 +14,7 @@ Script en Python con `pandas` que lee los reportes de ventas de 4 sucursales (Me
 │   ├── consolidado_limpio.xlsx    # Consolidado limpio y normalizado
 │   ├── grafico_categoria.png      # Barras: ventas por categoría
 │   └── grafico_vendedor.png       # Torta: participación por vendedor
-├── main.py                    # Script principal: consolida, limpia, analiza y grafica
+├── bot_reporte.py             # Script principal: consolida, limpia, analiza y grafica
 ├── datos.py                   # Define los archivos fuente y los carga en DataFrames
 └── README.md
 ```
@@ -22,7 +22,7 @@ Script en Python con `pandas` que lee los reportes de ventas de 4 sucursales (Me
 ## Cómo ejecutar
 
 ```bash
-python main.py
+python bot_reporte.py
 ```
 
 Puedes ejecutarlo las veces que quieras: los archivos generados en `resultados/` no interfieren en la siguiente ejecución.
@@ -51,6 +51,6 @@ pandas.errors.InvalidIndexError: Reindexing only valid with uniquely valued Inde
 
 La solución fue doble:
 
-1. **Módulo `datos.py`**: define una lista fija de los 4 archivos fuente (`ARCHIVOS`). Al importarlo, `main.py` solo lee los datos fuente y nunca lo que él mismo genera.
+1. **Módulo `datos.py`**: define una lista fija de los 4 archivos fuente (`ARCHIVOS`). Al importarlo, `bot_reporte.py` solo lee los datos fuente y nunca lo que él mismo genera.
 2. **Carpetas separadas**: los datos viven en `datos/` y las salidas en `resultados/`, así nunca se mezclan.
 3. **Guardar sin índice**: los Excel de salida se guardan con `index=False`, evitando la columna extra `Unnamed: 0` al volver a leerlos.
