@@ -9,13 +9,16 @@ Script en Python con `pandas` que lee los reportes de ventas de 4 sucursales (Me
 │   ├── sucursal_medellin.csv      # Formato estándar
 │   ├── sucursal_bogota.xlsx       # Con nombres de columnas distintos
 │   ├── sucursal_cali.csv          # Formato estándar
-│   └── sucursal_barranquilla.xlsx # Formato estándar
-├── resultados/                # Salidas generadas por el script
+│   ├── sucursal_barranquilla.xlsx # Formato estándar
+│   └── sucursal_*_reporte2.csv    # Reportes nuevos que arrastras a su tiempo
+├── resultados/                # Salidas generadas por los scripts
 │   ├── consolidado_limpio.xlsx    # Consolidado limpio y normalizado
 │   ├── grafico_categoria.png      # Barras: ventas por categoría
-│   └── grafico_vendedor.png       # Torta: participación por vendedor
-├── bot_reporte.py             # Script principal: consolida, limpia, analiza y grafica
-├── datos.py                   # Define los archivos fuente y los carga en DataFrames
+│   ├── grafico_vendedor.png       # Torta: participación por vendedor
+│   └── log_automatizacion.txt     # Registro de cada proceso de automatización
+├── bot_reporte.py             # Script principal: consolida, limpia, analiza y grafica (una vez)
+├── automatizar.py             # Bot que vigila datos/ y procesa reportes nuevos en automático
+├── datos.py                   # Descubre los archivos fuente y los carga en DataFrames
 └── README.md
 ```
 
@@ -27,7 +30,42 @@ python bot_reporte.py
 
 Puedes ejecutarlo las veces que quieras: los archivos generados en `resultados/` no interfieren en la siguiente ejecución.
 
-## Qué hace el script
+## Automatización (automatizar.py)
+
+El sistema ahora puede **vigilar la carpeta `datos/`** y procesar reportes nuevos automáticamente, sin que tengas que editar el código ni ejecutar nada a mano.
+
+### Qué hace el sistema
+
+Deja corriendo `automatizar.py` y él se encarga de todo: relee los reportes de las sucursales, los normaliza y consolida, limpia los datos, actualiza el Excel consolidado, regenera los dos gráficos y va guardando un **log** con cada proceso. Es como un empleado que está pendiente de la carpeta todo el tiempo.
+
+### Cómo detecta los archivos nuevos
+
+Funciona con `glob` para descubrir los archivos fuente y con una comparación de nombres:
+
+1. Al arrancar, toma una "foto" de los nombres de archivos que ya hay en `datos/` (`sucursal_*.csv` y `sucursal_*.xlsx`).
+2. Cada **5 segundos** vuelve a listar la carpeta y la compara con esa foto.
+3. Si aparece un nombre que no estaba antes (por ejemplo `sucursal_cali_reporte2.csv`), ahí hay un archivo nuevo.
+
+### Qué pasa cuando encuentra uno
+
+Cuando detecta un archivo nuevo:
+
+1. Imprime en consola `Nuevo archivo detectado: {...}` con su nombre.
+2. Vuelve a leer **todos** los reportes con `glob` (los originales + el nuevo), los normaliza y los consolida en un solo DataFrame.
+3. Limpia duplicados y rellena los nulos (método de pago y vendedor con `'Desconocido'`, precio con la mediana del producto).
+4. Sobre-escribe `resultados/consolidado_limpio.xlsx` y regenera `grafico_categoria.png` y `grafico_vendedor.png`.
+5. **Agrega** una entrada en `resultados/log_automatizacion.txt` con la fecha/hora, el archivo detectado y el total de registros procesados.
+6. Sigue vigilando, listo para el siguiente archivo.
+
+### Ejecutar la automatización
+
+```bash
+python automatizar.py
+```
+
+Imprime `Monitoreando carpeta 'datos/'...`. Deja el script corriendo y arrastra los nuevos reportes a `datos/`, uno a la vez. Para detenerlo usa `Ctrl+C`. El script `bot_reporte.py` sigue disponible si quieres procesar todo una sola vez.
+
+## Qué hace el script (bot_reporte.py)
 
 1. **Carga**: lee los 4 archivos fuente desde `datos/`, sin importar si son `.csv` o `.xlsx`.
 2. **Normaliza**: renombra las columnas de Bogotá (`Fecha_Venta`, `Producto`, ...) al formato estándar del resto.
@@ -101,6 +139,6 @@ pandas.errors.InvalidIndexError: Reindexing only valid with uniquely valued Inde
 
 La solución fue doble:
 
-1. **Módulo `datos.py`**: define una lista fija de los 4 archivos fuente (`ARCHIVOS`). Al importarlo, `bot_reporte.py` solo lee los datos fuente y nunca lo que él mismo genera.
+1. **Módulo `datos.py`**: define los archivos fuente de forma confiable. Ahora, en lugar de una lista fija, usa `obtener_archivos_datos()` con **glob acotado**: solo busca `sucursal_*.csv` y `sucursal_*.xlsx` dentro de la carpeta `datos/`. Como las salidas viven en `resultados/` y no empiezan con `sucursal_`, nunca vuelven a ser leídas.
 2. **Carpetas separadas**: los datos viven en `datos/` y las salidas en `resultados/`, así nunca se mezclan.
 3. **Guardar sin índice**: los Excel de salida se guardan con `index=False`, evitando la columna extra `Unnamed: 0` al volver a leerlos.
