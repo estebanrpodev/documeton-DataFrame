@@ -1,0 +1,8 @@
+RESUMEN EJECUTIVO - Bot de Ventas
+Fecha: 2026-09-07 12:34:30.465406
+
+Categoria con mejor desempeño: Electronica
+Vendedor con mas ventas: Carlos
+Producto mas vendido: Cargador USB-C (10 ventas)
+Promedio de venta por transacción: $133,517
+Total de ventas acumuladas: $10,013,800

@@ -1,0 +1,5 @@
+fecha,producto,categoria,cantidad,precio_unitario,vendedor,metodo_pago
+2026-08-24,Laptop,Electronica,1,2500000,Carlos,Efectivo
+2026-08-25,Camisa,Ropa,3,45000,Ana,Tarjeta
+2026-08-26,Mouse,Electronica,4,35000,Diego,Efectivo
+2026-08-27,Pantalon,Ropa,2,89000,Ana,Tarjeta

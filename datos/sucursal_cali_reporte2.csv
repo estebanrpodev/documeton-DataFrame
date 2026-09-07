@@ -1,0 +1,5 @@
+fecha,producto,categoria,cantidad,precio_unitario,vendedor,metodo_pago
+2026-08-24,Teclado,Electronica,2,65000,Sofia,Efectivo
+2026-08-25,Falda,Ropa,1,52000,Juan,Tarjeta
+2026-08-26,Audifonos,Electronica,3,38000,Sofia,Efectivo
+2026-08-27,Chaqueta,Ropa,1,120000,Juan,Tarjeta

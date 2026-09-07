@@ -74,11 +74,37 @@ def procesar_todo(archivo_nuevo):
     plt.close()
 
     # Log del proceso
-    with open(os.path.join(CARPETA_RESULTADOS, "log_automatizacion.txt"), "a") as f:
+    with open(os.path.join(CARPETA_RESULTADOS, "log_automatizacion.txt"), "a", encoding="utf-8") as f:
         f.write(f"Proceso ejecutado: {pd.Timestamp.now()}\n")
         f.write(f"Archivo detectado: {archivo_nuevo}\n")
         f.write(f"Total de registros procesados: {len(df_consolidado)}\n")
         f.write("---\n")
+
+    # Banner visual con resumen en pantalla
+    total_ventas = df_consolidado['precio_unitario'].sum()
+    print("=" * 40)
+    print("  NUEVO REPORTE PROCESADO EXITOSAMENTE")
+    print(f"  Total ventas acumuladas: ${total_ventas:,.0f}")
+    print("=" * 40)
+
+    # Resumen ejecutivo en archivo de texto
+    categoria_top = df_consolidado.groupby('categoria')['precio_unitario'].sum().idxmax()
+    vendedor_top = df_consolidado.groupby('vendedor')['precio_unitario'].sum().idxmax()
+
+    # Metricas nuevas: producto mas vendido (value_counts) y promedio por transaccion (mean)
+    productos_mas_vendidos = df_consolidado['producto'].value_counts()
+    producto_top = productos_mas_vendidos.idxmax()
+    producto_top_ventas = productos_mas_vendidos.max()
+    promedio_por_transaccion = df_consolidado['precio_unitario'].mean()
+
+    with open(os.path.join(CARPETA_RESULTADOS, "resumen_ejecutivo.txt"), "w", encoding="utf-8") as f:
+        f.write("RESUMEN EJECUTIVO - Bot de Ventas\n")
+        f.write(f"Fecha: {pd.Timestamp.now()}\n\n")
+        f.write(f"Categoria con mejor desempeño: {categoria_top}\n")
+        f.write(f"Vendedor con mas ventas: {vendedor_top}\n")
+        f.write(f"Producto mas vendido: {producto_top} ({producto_top_ventas} ventas)\n")
+        f.write(f"Promedio de venta por transacción: ${promedio_por_transaccion:,.0f}\n")
+        f.write(f"Total de ventas acumuladas: ${total_ventas:,.0f}\n")
 
     print("Proceso completado - archivos actualizados en resultados/")
 
