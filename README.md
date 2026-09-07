@@ -144,6 +144,8 @@ Empate en el primer puesto con **10 ventas** cada uno:
 | Sofia | $103.000 | 1,0% |
 | Diego | $35.000 | 0,3% |
 
+> En el gráfico `grafico_vendedor.png`, los vendedores que aportan menos del **4%** se agrupan en la tajada **"Otros"** ($938.700) para que la torta siga siendo legible. Carlos, Camila Ruiz, Andres Gomez, Sofia Mena, Felipe Torres y Laura Diaz se muestran individualmente.
+
 ### Métodos de pago
 
 Tarjeta: 23 ventas · Efectivo: 22 · Transferencia: 16 · Desconocido: 14
