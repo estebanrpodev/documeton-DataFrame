@@ -82,7 +82,14 @@ plt.show()
 plt.close()  # Cierra la figura para que el siguiente grafico no se dibuje encima
 
 # 6b. Participación por vendedor (gráfico de torta)
-ventas_por_vendedor = df_consolidado.groupby('vendedor')['precio_unitario'].sum()
+# Los vendedores pequeños se agrupan en "Otros" para que la torta
+# siga siendo legible con muchos vendedores distintos.
+ventas_por_vendedor = df_consolidado.groupby('vendedor')['precio_unitario'].sum().sort_values(ascending=False)
+umbral = ventas_por_vendedor.sum() * 0.04  # agrupa a quienes aportan menos del 4%
+pequeños = ventas_por_vendedor[ventas_por_vendedor < umbral]
+if len(pequeños) > 0:
+    ventas_por_vendedor = ventas_por_vendedor[ventas_por_vendedor >= umbral]
+    ventas_por_vendedor['Otros'] = pequeños.sum()
 ventas_por_vendedor.plot(kind='pie', autopct='%1.1f%%', title='Participacion de Ventas por Vendedor')
 plt.ylabel('')  # No aplica en gráficos de torta
 plt.tight_layout()
