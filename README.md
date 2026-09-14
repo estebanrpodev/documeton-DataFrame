@@ -75,14 +75,14 @@ Imprime `Monitoreando carpeta 'datos/'...`. Deja el script corriendo y arrastra 
 1. **Carga**: lee los 4 archivos fuente desde `datos/`, sin importar si son `.csv` o `.xlsx`.
 2. **Normaliza**: renombra las columnas de Bogotá (`Fecha_Venta`, `Producto`, ...) al formato estándar del resto.
 3. **Limpia**:
-   - Elimina filas duplicadas exactas.
-   - Rellena nulos en `metodo_pago` y `vendedor` con `'Desconocido'`.
-   - Rellena nulos en `precio_unitario` con la mediana del mismo producto.
+    - Elimina filas duplicadas exactas.
+    - Rellena nulos en `metodo_pago` y `vendedor` con `'Desconocido'`.
+    - Rellena nulos en `precio_unitario` con la mediana del mismo producto.
 4. **Guarda**: escribe `resultados/consolidado_limpio.xlsx` con `index=False`.
 5. **Analiza y grafica**:
-   - Barras: ventas totales por categoría → `resultados/grafico_categoria.png`.
-   - Torta: participación de cada vendedor → `resultados/grafico_vendedor.png`.
-   - Producto que más veces aparece en las ventas (`value_counts()`), reportando empates si los hay.
+    - Barras: ventas totales por categoría → `resultados/grafico_categoria.png`.
+    - Torta: participación de cada vendedor → `resultados/grafico_vendedor.png`.
+    - Producto que más veces aparece en las ventas (`value_counts()`), reportando empates si los hay.
 
 ## Resultados
 
@@ -92,9 +92,9 @@ Números reales de la última ejecución del script (con los 3 reportes nuevos y
 
 - Filas leídas: **78** → filas limpias: **75** (se eliminaron **3 duplicados**)
 - Valores nulos corregidos:
-  - `metodo_pago`: 14 → rellenados con `'Desconocido'`
-  - `vendedor`: 2 → rellenados con `'Desconocido'`
-  - `precio_unitario`: 3 → rellenados con la mediana del mismo producto
+    - `metodo_pago`: 14 → rellenados con `'Desconocido'`
+    - `vendedor`: 2 → rellenados con `'Desconocido'`
+    - `precio_unitario`: 3 → rellenados con la mediana del mismo producto
 
 ### Resumen ejecutivo (4 métricas clave)
 
@@ -156,7 +156,7 @@ El ticket promedio de venta es de **$133.517** por transacción.
 
 Los gráficos con estos resultados quedan en `resultados/grafico_categoria.png` y `resultados/grafico_vendedor.png`.
 
-\* Los totales corresponden a la suma de `precio_unitario` por venta, igual que en los gráficos.
+* Los totales corresponden a la suma de `precio_unitario` por venta, igual que en los gráficos.
 
 ## Análisis de negocio (preguntas con las 4 métricas)
 
@@ -192,3 +192,25 @@ La solución fue doble:
 1. **Módulo `datos.py`**: define los archivos fuente de forma confiable. Ahora, en lugar de una lista fija, usa `obtener_archivos_datos()` con **glob acotado**: solo busca `sucursal_*.csv` y `sucursal_*.xlsx` dentro de la carpeta `datos/`. Como las salidas viven en `resultados/` y no empiezan con `sucursal_`, nunca vuelven a ser leídas.
 2. **Carpetas separadas**: los datos viven en `datos/` y las salidas en `resultados/`, así nunca se mezclan.
 3. **Guardar sin índice**: los Excel de salida se guardan con `index=False`, evitando la columna extra `Unnamed: 0` al volver a leerlos.
+
+## Sesión de trabajo actual
+
+Durante esta sesión se realizaron las siguientes actividades:
+
+1. **Creación de REFLEXION.md**: Se añadió este archivo con las respuestas reflexivas sobre el sistema:
+   - Explicación de `os.listdir(ruta_datos)`
+   - Diferencias entre `set` y `lista` para el rastreo de archivos procesados
+   - Importancia de `drop_duplicates()` en la limpieza de datos
+   - Conteo de commits (11) y ejemplos de mensajes
+   - Sugerencias de mejora para el sistema
+   - Aspectos más gratificantes del aprendizaje
+
+2. **Actualización del perfil de GitHub (pendiente manual)**:
+   Para actualizar imagen y bio hay que entrar a tu cuenta:
+   - Inicia sesión en `https://github.com/estebanrpodev`.
+   - Clic en tu avatar (arriba a la derecha) → **Your profile** → **Edit profile**.
+   - **Foto de perfil**: clic sobre el avatar actual → subir imagen (recomendado 500x500 px) → **Set new profile picture**.
+   - **Bio**: escribe una breve descripción, por ejemplo:
+     `"Analista de datos en formación | Automatización de reportes con Python y pandas | GitHub en crecimiento"`
+   - **README de perfil (opcional)**: crear un repositorio con tu nombre de usuario (`estebanrpodev/estebanrpodev`) y un `README.md`.
+   - Clic en **Save changes**.
